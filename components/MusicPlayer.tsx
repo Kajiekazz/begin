@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Music, Disc } from 'lucide-react';
 import GlassCard from './GlassCard';
@@ -55,7 +56,7 @@ const MusicPlayer: React.FC = () => {
   };
 
   return (
-    <div className={`fixed bottom-4 left-4 z-[60] transition-all duration-500 ease-spring ${isMinimized ? 'w-12' : 'w-80'}`}>
+    <div className={`fixed bottom-4 left-4 z-[60] transition-all duration-500 ease-spring ${isMinimized ? 'w-12' : 'w-80 max-w-[calc(100vw-2rem)]'}`}>
       <audio 
         ref={audioRef} 
         src={currentTrack.url} 

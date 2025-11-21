@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Send, X, HelpCircle } from 'lucide-react';
+import { Send, X, HelpCircle, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair } from 'lucide-react';
 
 interface Bullet {
   id: number;
@@ -102,6 +102,19 @@ const DestroyerPlane: React.FC = () => {
     }
   };
 
+  const fireBullet = () => {
+      playSound('shoot');
+      setBullets(prev => [
+        ...prev, 
+        { 
+          id: Date.now() + Math.random(), 
+          x: planeRef.current.x + Math.cos(planeRef.current.angle) * 20, 
+          y: planeRef.current.y + Math.sin(planeRef.current.angle) * 20,
+          angle: planeRef.current.angle
+        }
+      ]);
+    };
+
   useEffect(() => {
     // Init Audio Context on Mount
     const AudioCtor = window.AudioContext || (window as any).webkitAudioContext;
@@ -143,19 +156,6 @@ const DestroyerPlane: React.FC = () => {
 
     // Initialize refs to match state
     planeRef.current = plane;
-
-    const fireBullet = () => {
-      playSound('shoot');
-      setBullets(prev => [
-        ...prev, 
-        { 
-          id: Date.now() + Math.random(), 
-          x: planeRef.current.x + Math.cos(planeRef.current.angle) * 20, 
-          y: planeRef.current.y + Math.sin(planeRef.current.angle) * 20,
-          angle: planeRef.current.angle
-        }
-      ]);
-    };
 
     // Game Loop
     const loop = () => {
@@ -233,7 +233,8 @@ const DestroyerPlane: React.FC = () => {
                htmlEl.tagName === 'HTML' ||
                htmlEl.classList.contains('destroyer-layer') ||
                htmlEl.classList.contains('manual-panel') ||
-               htmlEl.closest('.manual-panel')
+               htmlEl.closest('.manual-panel') ||
+               htmlEl.closest('.mobile-controls') // Ignore mobile controls
              ) {
                continue;
              }
@@ -319,9 +320,57 @@ const DestroyerPlane: React.FC = () => {
      setParticles(prev => [...prev, ...newParticles]);
   };
 
+  // Mobile Touch Handlers
+  const handleTouch = (key: string, pressed: boolean) => {
+     keysRef.current[key] = pressed;
+  };
+
   return (
-    <div className="fixed inset-0 z-[9999] pointer-events-none destroyer-layer overflow-hidden font-sans">
+    <div className="fixed inset-0 z-[9999] pointer-events-none destroyer-layer overflow-hidden font-sans no-select">
        
+       {/* Mobile Controls Overlay */}
+       <div className="absolute bottom-6 left-0 w-full px-6 flex justify-between items-end pointer-events-auto lg:hidden mobile-controls z-[1000]">
+          {/* D-PAD */}
+          <div className="relative w-32 h-32 bg-white/10 rounded-full backdrop-blur-md border border-white/20">
+             <button 
+               className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 p-3 active:bg-white/20 rounded-full"
+               onTouchStart={(e) => { e.preventDefault(); handleTouch('ArrowUp', true); }}
+               onTouchEnd={(e) => { e.preventDefault(); handleTouch('ArrowUp', false); }}
+             >
+               <ArrowUp className="text-white/80" />
+             </button>
+             <button 
+               className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-2 p-3 active:bg-white/20 rounded-full"
+               onTouchStart={(e) => { e.preventDefault(); handleTouch('ArrowDown', true); }}
+               onTouchEnd={(e) => { e.preventDefault(); handleTouch('ArrowDown', false); }}
+             >
+               <ArrowDown className="text-white/80" />
+             </button>
+             <button 
+               className="absolute left-0 top-1/2 -translate-x-2 -translate-y-1/2 p-3 active:bg-white/20 rounded-full"
+               onTouchStart={(e) => { e.preventDefault(); handleTouch('ArrowLeft', true); }}
+               onTouchEnd={(e) => { e.preventDefault(); handleTouch('ArrowLeft', false); }}
+             >
+               <ArrowLeft className="text-white/80" />
+             </button>
+             <button 
+               className="absolute right-0 top-1/2 translate-x-2 -translate-y-1/2 p-3 active:bg-white/20 rounded-full"
+               onTouchStart={(e) => { e.preventDefault(); handleTouch('ArrowRight', true); }}
+               onTouchEnd={(e) => { e.preventDefault(); handleTouch('ArrowRight', false); }}
+             >
+               <ArrowRight className="text-white/80" />
+             </button>
+          </div>
+
+          {/* FIRE BTN */}
+          <button 
+             className="w-20 h-20 bg-red-500/40 active:bg-red-500/60 border-2 border-red-400 rounded-full flex items-center justify-center backdrop-blur-md shadow-lg mb-4"
+             onTouchStart={(e) => { e.preventDefault(); fireBullet(); }}
+          >
+             <Crosshair className="text-white" size={32} />
+          </button>
+       </div>
+
        {/* Manual / Instructions */}
        {showManual && (
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 dark:bg-zinc-900/95 backdrop-blur-xl p-6 rounded-3xl shadow-2xl border border-sakura-200 pointer-events-auto manual-panel max-w-sm w-full animate-bounce-slight">
@@ -336,23 +385,26 @@ const DestroyerPlane: React.FC = () => {
             </div>
             
             <div className="space-y-3 text-sm text-slate-600 dark:text-zinc-300">
-               <div className="flex items-center gap-3">
+               <div className="hidden lg:flex items-center gap-3">
                   <div className="flex gap-1">
                      <span className="kbd">↑</span>
                      <span className="kbd">↓</span>
                   </div>
                   <span>控制飞机前进 / 后退</span>
                </div>
-               <div className="flex items-center gap-3">
+               <div className="hidden lg:flex items-center gap-3">
                   <div className="flex gap-1">
                      <span className="kbd">←</span>
                      <span className="kbd">→</span>
                   </div>
                   <span>调整飞行航向</span>
                </div>
-               <div className="flex items-center gap-3">
+               <div className="hidden lg:flex items-center gap-3">
                   <span className="kbd w-16">Space</span>
                   <span>发射清除子弹</span>
+               </div>
+               <div className="lg:hidden text-center text-sakura-500 font-bold">
+                  使用屏幕下方的虚拟摇杆进行操作
                </div>
             </div>
 

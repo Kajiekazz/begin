@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Trophy, Heart, Crown } from 'lucide-react';
+import { Trophy, Heart, Crown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
 
 interface PixelGameProps {
   onClose: () => void;
@@ -235,6 +235,22 @@ const PixelGame: React.FC<PixelGameProps> = ({ onClose, onAddXp }) => {
     };
   }, [gameState, onClose]);
 
+  // Touch Helpers
+  const handleTouchStart = (key: string) => {
+     keys.current[key] = true;
+     if (key === 'Space' && gameState === 'PLAYING' && player.current.isGrounded) {
+         player.current.vy = -350;
+         player.current.isGrounded = false;
+         playSfx('jump');
+     }
+     if (gameState === 'GAMEOVER' && key === 'Enter') {
+         onClose();
+     }
+  };
+  const handleTouchEnd = (key: string) => {
+     keys.current[key] = false;
+  };
+
   // --- MAIN GAME LOOP ---
   useEffect(() => {
     if (gameState !== 'PLAYING') return;
@@ -463,7 +479,46 @@ const PixelGame: React.FC<PixelGameProps> = ({ onClose, onAddXp }) => {
   }, [gameState, onAddXp]); 
 
   return (
-    <div className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-sm flex items-center justify-center font-retro overflow-hidden">
+    <div className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-sm flex items-center justify-center font-retro overflow-hidden no-select">
+      
+      {/* Mobile Controls Overlay */}
+      {gameState === 'PLAYING' && (
+        <div className="absolute bottom-8 left-0 w-full px-6 flex justify-between items-end z-[100] lg:hidden pointer-events-auto">
+            <div className="flex gap-6">
+               <button 
+                  className="w-16 h-16 bg-white/10 active:bg-white/30 border-2 border-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
+                  onTouchStart={(e) => { e.preventDefault(); handleTouchStart('ArrowLeft'); }}
+                  onTouchEnd={(e) => { e.preventDefault(); handleTouchEnd('ArrowLeft'); }}
+               >
+                  <ArrowLeft className="text-white opacity-80" size={32} />
+               </button>
+               <button 
+                  className="w-16 h-16 bg-white/10 active:bg-white/30 border-2 border-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
+                  onTouchStart={(e) => { e.preventDefault(); handleTouchStart('ArrowRight'); }}
+                  onTouchEnd={(e) => { e.preventDefault(); handleTouchEnd('ArrowRight'); }}
+               >
+                  <ArrowRight className="text-white opacity-80" size={32} />
+               </button>
+            </div>
+
+            <button 
+              className="w-20 h-20 bg-sakura-500/20 active:bg-sakura-500/40 border-2 border-sakura-400/40 rounded-full flex items-center justify-center backdrop-blur-md transition-colors mb-2"
+              onTouchStart={(e) => { e.preventDefault(); handleTouchStart('Space'); }}
+              onTouchEnd={(e) => { e.preventDefault(); handleTouchEnd('Space'); }}
+            >
+               <ArrowUp className="text-sakura-300" size={40} />
+            </button>
+        </div>
+      )}
+
+      {/* Game Over Mobile Tap Area */}
+      {gameState === 'GAMEOVER' && (
+         <button 
+           className="absolute inset-0 z-[101] w-full h-full bg-transparent lg:hidden"
+           onClick={() => handleTouchStart('Enter')}
+         />
+      )}
+
       {gameState === 'TRANSITION' && (
         <div className="absolute inset-0 bg-black flex flex-col items-center justify-center text-center z-50">
            {showStageTitle && (
@@ -478,6 +533,7 @@ const PixelGame: React.FC<PixelGameProps> = ({ onClose, onAddXp }) => {
 
       <div className={`relative transition-all duration-700 ${gameState !== 'TRANSITION' ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
           <div className="relative border-[16px] border-zinc-800 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] bg-zinc-900">
+            {/* Header Stats */}
             <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10 pointer-events-none">
                 <div className="flex flex-col gap-1">
                    <div className="text-white text-xs drop-shadow-md">SCORE</div>
@@ -510,7 +566,7 @@ const PixelGame: React.FC<PixelGameProps> = ({ onClose, onAddXp }) => {
               ref={canvasRef} 
               width={320} 
               height={240} 
-              className="block w-[800px] h-[600px] max-w-[90vw] max-h-[70vh] bg-[#2a0210] rounded-sm"
+              className="block w-[800px] h-[600px] max-w-[90vw] max-h-[50vh] bg-[#2a0210] rounded-sm"
               style={{ imageRendering: 'pixelated' }}
             />
 
@@ -538,13 +594,16 @@ const PixelGame: React.FC<PixelGameProps> = ({ onClose, onAddXp }) => {
                       </div>
                    </div>
                 </div>
-                <div className="animate-blink text-white text-sm tracking-widest cursor-pointer hover:text-sakura-300" onClick={onClose}>
+                <div className="hidden lg:block animate-blink text-white text-sm tracking-widest cursor-pointer hover:text-sakura-300" onClick={onClose}>
                    PRESS [ENTER] TO EXIT
+                </div>
+                <div className="lg:hidden animate-blink text-white text-sm tracking-widest mt-4">
+                   TAP SCREEN TO EXIT
                 </div>
               </div>
             )}
           </div>
-          <div className="mt-4 flex justify-between text-zinc-500 text-[10px] uppercase tracking-widest px-2">
+          <div className="hidden lg:flex mt-4 justify-between text-zinc-500 text-[10px] uppercase tracking-widest px-2">
              <div>[ARROWS/SPACE] MOVE & JUMP</div>
              <div>[ENTER] START / EXIT</div>
           </div>
