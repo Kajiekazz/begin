@@ -16,7 +16,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ xp, level, onPlayGame }) => {
   const progress = (xp % 100);
 
   return (
-    <div className="relative group w-full max-w-[320px] [perspective:1000px]">
+    <div className="relative group w-full [perspective:1000px]">
         
         {/* FLIP CONTAINER */}
         <div 

@@ -70,7 +70,11 @@ function App() {
 
   const handleFooterLink = (e: React.MouseEvent, name: string) => {
     e.preventDefault();
-    alert(`${name} feature coming soon!`);
+    if (name === 'RSS Feed') {
+      window.open('/rss.xml', '_blank');
+    } else if (name === 'Sitemap') {
+      window.open('/sitemap.xml', '_blank');
+    }
   };
 
   return (
@@ -237,15 +241,15 @@ function App() {
           </div>
 
           {/* LAYOUT: CONTENT GRID (Profile & Links) */}
-          <div className="w-full max-w-5xl flex flex-col lg:flex-row items-center lg:items-start justify-center gap-12 lg:gap-20 relative">
+          <div className="w-full max-w-5xl flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 lg:gap-20 relative">
              
              {/* LEFT: Profile Card */}
-             <div className="flex flex-col items-center flex-shrink-0 z-10">
+             <div className="w-full max-w-md lg:w-auto lg:max-w-none z-10">
                 <ProfileCard xp={xp} level={level} onPlayGame={() => setIsGameOpen(true)} />
              </div>
 
              {/* RIGHT: Link Grid */}
-             <div className="w-full max-w-md z-10 pt-4 lg:pt-8">
+             <div className="w-full max-w-md z-10 lg:pt-8">
                 <LinkGrid />
              </div>
           </div>
