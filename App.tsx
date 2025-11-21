@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
-import { BACKGROUND_IMAGE, PROFILE } from './constants';
+import { BACKGROUND_IMAGE, PROFILE } from './components/constants';
 import Clock from './components/Clock';
 import LinkGrid from './components/LinkGrid';
 import ProfileCard from './components/ProfileCard';

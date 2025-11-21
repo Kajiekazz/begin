@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
-import { SEARCH_ENGINES } from '../constants';
+import { SEARCH_ENGINES } from './constants';
 import GlassCard from './GlassCard';
 
 const SearchBar: React.FC = () => {

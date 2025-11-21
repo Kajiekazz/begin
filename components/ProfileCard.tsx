@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PROFILE, LINKS } from '../constants';
+import { PROFILE, LINKS } from './constants';
 import GlassCard from './GlassCard';
 import { Sparkles, Heart, Code, Gamepad2, Mail } from 'lucide-react';
 

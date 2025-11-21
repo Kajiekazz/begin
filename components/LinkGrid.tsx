@@ -1,5 +1,5 @@
 import React from 'react';
-import { LINKS } from '../constants';
+import { LINKS } from './constants';
 import GlassCard from './GlassCard';
 import { ExternalLink } from 'lucide-react';
 
