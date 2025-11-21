@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA 重定向规则，防止刷新变 404
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# 安全标头配置
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # 允许 Tailwind CDN, Google Fonts, 以及外部的图片和媒体资源
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      img-src 'self' data: https:;
+      media-src 'self' https: blob:;
+      font-src 'self' data: https://fonts.gstatic.com;
+      connect-src 'self' https:;
+      object-src 'none';
+    """
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
