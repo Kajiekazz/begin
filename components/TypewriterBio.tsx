@@ -11,26 +11,36 @@ const TypewriterBio: React.FC<TypewriterBioProps> = ({ text, className = "" }) =
   const [isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     setDisplayedText("");
     setIsTyping(true);
-    let currentIndex = 0;
-    
-    // Initial delay before typing starts
-    const startTimeout = setTimeout(() => {
-      const intervalId = setInterval(() => {
-        if (currentIndex < text.length) {
-          setDisplayedText((prev) => prev + text.charAt(currentIndex));
-          currentIndex++;
-        } else {
-          setIsTyping(false);
-          clearInterval(intervalId);
-        }
-      }, 150); // Typing speed (ms per char)
 
-      return () => clearInterval(intervalId);
-    }, 800);
+    // 1.5s delay before starting to type
+    const timer = setTimeout(() => {
+        if (!isMounted) return;
+        
+        let idx = 0;
+        const interval = setInterval(() => {
+             if (!isMounted) { 
+                 clearInterval(interval); 
+                 return; 
+             }
 
-    return () => clearTimeout(startTimeout);
+             if (idx < text.length) {
+                 // Use slice to ensure text integrity and avoid duplication glitches
+                 setDisplayedText(text.slice(0, idx + 1));
+                 idx++;
+             } else {
+                 setIsTyping(false);
+                 clearInterval(interval);
+             }
+        }, 250); // Slower speed: 250ms per character
+    }, 1500); 
+
+    return () => {
+        isMounted = false;
+        clearTimeout(timer);
+    };
   }, [text]);
 
   return (
@@ -42,7 +52,7 @@ const TypewriterBio: React.FC<TypewriterBioProps> = ({ text, className = "" }) =
         <span className={`inline-block w-[2px] h-5 ml-1 bg-sakura-500 align-middle ${isTyping ? 'opacity-100' : 'cursor-blink'}`}></span>
       </div>
       
-      {/* Decorative Pen/Feather Icon (Optional visual cue) */}
+      {/* Decorative Pen/Feather Icon */}
       <div className="absolute -right-2 -bottom-2 text-sakura-400 opacity-50 rotate-[-45deg]">
          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
