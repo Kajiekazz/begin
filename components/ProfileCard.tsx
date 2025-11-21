@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { PROFILE, LINKS } from './constants';
 import GlassCard from './GlassCard';
@@ -15,12 +16,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ xp, level, onPlayGame }) => {
   const progress = (xp % 100);
 
   return (
-    <div className="relative group mt-8 lg:mt-0 [perspective:1000px]">
+    <div className="relative group w-full max-w-[320px] [perspective:1000px]">
         
         {/* FLIP CONTAINER */}
         <div 
           className={`
-            relative w-full max-w-[320px] transition-all duration-700 [transform-style:preserve-3d] cursor-pointer
+            relative w-full transition-all duration-700 [transform-style:preserve-3d] cursor-pointer
             ${isFlipped ? '[transform:rotateY(180deg)]' : ''}
           `}
           onClick={() => setIsFlipped(!isFlipped)}
@@ -78,23 +79,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ xp, level, onPlayGame }) => {
                             </div>
                         </div>
 
-                        {/* Bio / Stats Box */}
+                        {/* Stats Box (Formerly Bio, now just Level Progress) */}
                         <div className="w-full mt-6 bg-white/50 dark:bg-black/20 rounded-xl p-3 border border-white/60 dark:border-sakura-500/20">
-                            {/* Pseudo-XP Bar */}
                             <div className="flex items-center justify-between text-[10px] font-bold text-sakura-400 mb-1 px-1">
                                 <span>XP</span>
                                 <span>{progress} / 100</span>
                             </div>
-                            <div className="w-full h-1.5 bg-sakura-100 dark:bg-white/10 rounded-full overflow-hidden mb-3">
+                            <div className="w-full h-1.5 bg-sakura-100 dark:bg-white/10 rounded-full overflow-hidden">
                                 <div 
                                 className="h-full bg-gradient-to-r from-sakura-300 to-sakura-500 rounded-full transition-all duration-300" 
                                 style={{ width: `${progress}%` }}
                                 />
                             </div>
-
-                            <p className="text-center text-sm font-medium text-slate-600 dark:text-sakura-100 leading-relaxed">
-                                {PROFILE.bio}
-                            </p>
                         </div>
 
                         {/* Tags / Skills */}

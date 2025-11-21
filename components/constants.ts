@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { LinkItem, Category, SearchEngine } from './types';
 
-export const APP_NAME = "Kajie's Space";
+export const APP_NAME = "Moeku's 导航页";
 export const USER_NAME = "卡介菌";
 
 // Background: User provided anime art
@@ -24,7 +24,7 @@ export const PROFILE = {
   title: "Giftia",
   bio: "时光流转，愿你与珍爱之人再度重逢",
   email: "moeku@foxmail.com",
-  tags: ["Anime", "Dev", "Chill"],
+  tags: ["Anime", "Code"],
   status: "Online ✨",
   gif: "https://telegraph-image-682.pages.dev/file/b6fcfd9b436273904d8c4.gif"
 };

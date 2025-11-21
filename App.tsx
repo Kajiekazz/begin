@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { BACKGROUND_IMAGE, PROFILE } from './components/constants';
 import Clock from './components/Clock';
@@ -9,6 +10,7 @@ import SakuraRain from './components/SakuraRain';
 import PixelGame from './components/PixelGame';
 import DestroyerPlane from './components/DestroyerPlane';
 import MusicPlayer from './components/MusicPlayer';
+import TypewriterBio from './components/TypewriterBio';
 import { Settings2, ImageOff, Image as ImageIcon, Moon, Sun, Rss, Map, Plane } from 'lucide-react';
 
 function App() {
@@ -65,6 +67,11 @@ function App() {
 
   // Level Calculation
   const level = Math.floor(xp / 100) + 1;
+
+  const handleFooterLink = (e: React.MouseEvent, name: string) => {
+    e.preventDefault();
+    alert(`${name} feature coming soon!`);
+  };
 
   return (
     <>
@@ -168,12 +175,12 @@ function App() {
 
         {/* MAIN CONTENT */}
         <main className={`
-          relative z-10 container mx-auto px-4 min-h-screen flex flex-col items-center justify-center py-10
+          relative z-10 container mx-auto px-4 min-h-screen flex flex-col items-center py-10
           transition-all duration-1000
           ${isLoading ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}
         `}>
           
-          {/* Settings Toggle - ADDED safe-zone class */}
+          {/* Settings Toggle */}
           <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-2 safe-zone">
             <button 
               onClick={() => setSettingsOpen(!settingsOpen)}
@@ -207,7 +214,6 @@ function App() {
               <GlassCard 
                 onClick={() => {
                   setIsDestroyerMode(!isDestroyerMode);
-                  // Close menu on activation to let user play immediately
                   if (!isDestroyerMode) setSettingsOpen(false);
                 }}
                 hoverEffect={true}
@@ -219,33 +225,48 @@ function App() {
             </div>
           </div>
 
-          <div className="w-full max-w-5xl flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-24">
-             
-             {/* LEFT: Identity */}
-             <div className="flex flex-col items-center relative group">
-                <ProfileCard xp={xp} level={level} onPlayGame={() => setIsGameOpen(true)} />
+          {/* LAYOUT: TOP SECTION (Clock & Bio) */}
+          <div className="w-full flex flex-col items-center justify-center mt-4 md:mt-12 mb-8 lg:mb-16 z-20">
+             <div className="animate-float" style={{ animationDuration: '8s' }}>
+                <Clock />
              </div>
-
-             {/* RIGHT: Navigation */}
-             <div className="flex flex-col items-center lg:items-start gap-8 w-full max-w-md">
-                <div className="pl-2 animate-float" style={{ animationDuration: '8s' }}>
-                   <Clock />
-                </div>
-                {/* SearchBar removed as requested */}
-                <div className="w-full pt-4">
-                   <LinkGrid />
-                </div>
+             
+             <div className="mt-6 z-20">
+                <TypewriterBio text={PROFILE.bio} />
              </div>
           </div>
 
-          <footer className="absolute bottom-4 w-full text-center pointer-events-auto z-20 flex flex-col items-center gap-2">
+          {/* LAYOUT: CONTENT GRID (Profile & Links) */}
+          <div className="w-full max-w-5xl flex flex-col lg:flex-row items-center lg:items-start justify-center gap-12 lg:gap-20 relative">
+             
+             {/* LEFT: Profile Card */}
+             <div className="flex flex-col items-center flex-shrink-0 z-10">
+                <ProfileCard xp={xp} level={level} onPlayGame={() => setIsGameOpen(true)} />
+             </div>
+
+             {/* RIGHT: Link Grid */}
+             <div className="w-full max-w-md z-10 pt-4 lg:pt-8">
+                <LinkGrid />
+             </div>
+          </div>
+
+          {/* FOOTER */}
+          <footer className="mt-auto pt-16 pb-4 w-full text-center pointer-events-auto z-20 flex flex-col items-center gap-2">
             <div className="flex gap-4">
-               <a href="#" className="text-slate-400 hover:text-sakura-500 transition-colors" title="RSS Feed">
+               <button 
+                 onClick={(e) => handleFooterLink(e, 'RSS Feed')}
+                 className="text-slate-400 hover:text-sakura-500 transition-colors cursor-pointer" 
+                 title="RSS Feed"
+               >
                  <Rss size={16} />
-               </a>
-               <a href="#" className="text-slate-400 hover:text-sakura-500 transition-colors" title="Sitemap">
+               </button>
+               <button 
+                 onClick={(e) => handleFooterLink(e, 'Sitemap')}
+                 className="text-slate-400 hover:text-sakura-500 transition-colors cursor-pointer" 
+                 title="Sitemap"
+               >
                  <Map size={16} />
-               </a>
+               </button>
             </div>
             <p className="text-slate-500 dark:text-sakura-200/60 font-bold text-xs drop-shadow-sm">
                {(new Date()).getFullYear()} © {PROFILE.name}'s Space

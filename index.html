@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Etheria Portal</title>
+    <title>Moeku's 导航页</title>
     <!-- Tailwind CDN retained as requested -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -149,6 +149,15 @@
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         user-select: none;
+      }
+
+      /* Typewriter Cursor */
+      .cursor-blink {
+        animation: blink-cursor 1s step-end infinite;
+      }
+      @keyframes blink-cursor {
+        from, to { border-color: transparent }
+        50% { border-color: currentColor }
       }
     </style>
     <script>
