@@ -255,7 +255,7 @@ function App() {
           </div>
 
           {/* FOOTER */}
-          <footer className="mt-auto pt-16 pb-4 w-full text-center pointer-events-auto z-20 flex flex-col items-center gap-2">
+          <footer className="mt-auto pt-16 pb-6 w-full text-center pointer-events-auto z-20 flex flex-col items-center gap-4">
             <div className="flex gap-4">
                <button 
                  onClick={(e) => handleFooterLink(e, 'RSS Feed')}
@@ -272,9 +272,28 @@ function App() {
                  <Map size={16} />
                </button>
             </div>
-            <p className="text-slate-500 dark:text-sakura-200/60 font-bold text-xs drop-shadow-sm">
-               {(new Date()).getFullYear()} © {PROFILE.name}'s Space
-            </p>
+            
+            <div className="flex flex-col items-center gap-2">
+                <p className="text-slate-500 dark:text-sakura-200/60 font-bold text-xs drop-shadow-sm">
+                   {(new Date()).getFullYear()} © {PROFILE.name}'s Space
+                </p>
+                
+                {/* MOE ICP FOOTER LINK */}
+                <a 
+                  href="https://icp.gov.moe/?keyword=20250940" 
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/40 dark:bg-night-800/40 hover:bg-white/60 dark:hover:bg-sakura-900/40 border border-white/20 dark:border-sakura-500/10 transition-all duration-300 group shadow-sm"
+                >
+                   <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sakura-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-sakura-500"></span>
+                   </span>
+                   <span className="text-[10px] font-bold text-slate-500 dark:text-sakura-300 group-hover:text-sakura-600 dark:group-hover:text-sakura-200 transition-colors">
+                     萌ICP备20250940号
+                   </span>
+                </a>
+            </div>
           </footer>
 
         </main>

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface TypewriterBioProps {
   text: string;
@@ -9,44 +9,53 @@ interface TypewriterBioProps {
 const TypewriterBio: React.FC<TypewriterBioProps> = ({ text, className = "" }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
+  
+  // Refs to track timers for proper cleanup to prevent glitches/race conditions
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
+    // Reset state on text change
     setDisplayedText("");
     setIsTyping(true);
 
-    // 1.5s delay before starting to type
-    const timer = setTimeout(() => {
-        if (!isMounted) return;
-        
+    // Clear any existing timers
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    // 1.5s delay before starting to type (wait for page animations)
+    timeoutRef.current = setTimeout(() => {
         let idx = 0;
-        const interval = setInterval(() => {
-             if (!isMounted) { 
-                 clearInterval(interval); 
-                 return; 
+        
+        // Start typing interval
+        intervalRef.current = setInterval(() => {
+             // Check if finished
+             if (idx >= text.length) {
+                 if (intervalRef.current) clearInterval(intervalRef.current);
+                 setIsTyping(false);
+                 return;
              }
 
-             if (idx < text.length) {
-                 // Use slice to ensure text integrity and avoid duplication glitches
-                 setDisplayedText(text.slice(0, idx + 1));
-                 idx++;
-             } else {
-                 setIsTyping(false);
-                 clearInterval(interval);
-             }
-        }, 250); // Slower speed: 250ms per character
+             // Use slice ensures we always render a valid substring based on index,
+             // preventing character duplication glitches common with "prev + char" logic.
+             const nextCharIndex = idx + 1;
+             setDisplayedText(text.slice(0, nextCharIndex));
+             idx++;
+             
+        }, 250); // Speed: 250ms per character (Slower/Relaxed)
     }, 1500); 
 
+    // Cleanup function
     return () => {
-        isMounted = false;
-        clearTimeout(timer);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [text]);
 
   return (
     <div className={`relative inline-block ${className}`}>
       <div className="relative z-10 px-6 py-2 bg-white/40 dark:bg-night-900/40 backdrop-blur-md rounded-xl border border-white/40 dark:border-sakura-500/20 shadow-lg text-center min-h-[3rem] flex items-center justify-center">
-        <span className="font-handwriting text-lg md:text-xl font-bold text-slate-700 dark:text-sakura-100 tracking-widest">
+        <span className="font-handwriting text-lg md:text-xl font-bold text-slate-700 dark:text-sakura-100 tracking-widest transition-all duration-75">
           {displayedText}
         </span>
         <span className={`inline-block w-[2px] h-5 ml-1 bg-sakura-500 align-middle ${isTyping ? 'opacity-100' : 'cursor-blink'}`}></span>

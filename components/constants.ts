@@ -26,7 +26,7 @@ export const PROFILE = {
   email: "moeku@foxmail.com",
   tags: ["Anime", "Code"],
   status: "Online ✨",
-  gif: "https://cloud.guguwo.top/d/picture-bed/Image_1763010897293.gif"
+  gif: "https://telegraph-image-682.pages.dev/file/b6fcfd9b436273904d8c4.gif"
 };
 
 // MASCOT CONFIGURATION
