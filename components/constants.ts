@@ -15,7 +15,7 @@ export const APP_NAME = "Moeku's 导航页";
 export const USER_NAME = "卡介菌";
 
 // Background: User provided anime art
-export const BACKGROUND_IMAGE = "https://eopfapi.2b2x.cn/pic?img=ua";
+export const BACKGROUND_IMAGE = "https://t.alcy.cc/pc";
 
 // USER PROFILE DATA
 export const PROFILE = {
