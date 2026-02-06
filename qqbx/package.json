@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "vite build"
+  },
   "dependencies": {
     "@bokuweb/zstd-wasm": "^0.0.27",
     "vite": "^7.3.1"
