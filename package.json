@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npm run generate-feeds && vite",
     "generate-feeds": "node scripts/generate-feeds.js",
-    "build": "npm run generate-feeds && tsc && vite build && cd qqbx && npm install && npm run build && mkdir -p /opt/build/repo/dist/qqbx && cp -rT dist /opt/build/repo/dist/qqbx",
+    "build": "npm run generate-feeds && tsc && vite build && cd qqbx && npm install && npm run build && mkdir -p ../dist/qqbx && cp -R dist/* ../dist/qqbx/",
     "preview": "vite preview"
   },
   "dependencies": {
