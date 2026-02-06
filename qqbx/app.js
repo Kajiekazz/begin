@@ -10,13 +10,25 @@ const COMPRESS_NONE = '0';
 const COMPRESS_BROTLI = '10';
 const COMPRESS_ZSTD = '11';
 
-// 图片路径配置
+// 图片路径配置（支持子路径部署）
 // 297 = 续标识 (/续标识) = CHAR_ZERO = \u0014\u01A8
 // 424 = 拜谢 (/拜谢) = CHAR_ONE = \u0014\u0129
+function getEmojiPath(filename) {
+    const basePath = location.pathname.replace(/\/[^\/]*$/, '') || '';
+    return `${basePath}/assets/qq_emoji/${filename}`;
+}
 const EMOJI_IMAGES = {
-    zero: 'assets/qq_emoji/297/apng/297.png',  // 续标识 - 0
-    one: 'assets/qq_emoji/424/apng/424.png'    // 拜谢 - 1
+    zero: getEmojiPath('297/apng/297.png'),   // 续标识 - 0
+    one: getEmojiPath('424/apng/424.png')     // 拜谢 - 1
 };
+
+// 初始化 header 图片
+function initHeaderEmoji() {
+    const zeroImg = document.getElementById('header-emoji-zero');
+    const oneImg = document.getElementById('header-emoji-one');
+    if (zeroImg) zeroImg.src = EMOJI_IMAGES.zero;
+    if (oneImg) oneImg.src = EMOJI_IMAGES.one;
+}
 
 // Brotli 模块缓存
 let brotliModule = null;
@@ -465,4 +477,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 初始化 header 图片
+    initHeaderEmoji();
 });
